@@ -1,0 +1,13 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Suhana Busamart",
+  "license": "MIT",
+  "devDependencies": {
+    "prisma": "^3.2.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.2.1"
+  }
+}

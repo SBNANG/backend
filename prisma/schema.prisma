@@ -1,0 +1,112 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model room {
+  room_id       Int       @id @default(autoincrement())
+  room_bed_size String    @db.VarChar(10)
+  room_price    Float     @db.Float
+  room_type     room_type @relation(fields: [room_type_id], references: [room_type_id])
+  room_type_id  Int
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  booking booking[]
+}
+
+model room_type {
+  room_type_id     Int      @id @default(autoincrement())
+  room_type_name   String   @db.VarChar(20)
+  room_type_detail String   @db.VarChar(50)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  room             room[]
+}
+
+model user {
+  user_id               Int         @id @default(autoincrement())
+  user_name             String      @db.VarChar(10)
+  user_surname          String      @db.VarChar(10)
+  user_email            String      @db.VarChar(50)
+  user_password         String      @db.Text
+  user_type             user_type   @relation(fields: [user_type_id], references: [user_type_id])
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  user_type_id          Int
+  customer_payment      payment[]   @relation("customer_payment")
+  authorities_payment   payment[]   @relation("authorities_payment")
+  customer_booking      booking[]   @relation("customer_booking")
+  authorities_booking   booking[]   @relation("authorities_booking")
+  customer_check_in     check_in[]  @relation("customer_check_in")
+  authorities_check_in  check_in[]  @relation("authorities_check_in")
+  customer_check_out    check_out[] @relation("customer_check_out")
+  authorities_check_out check_out[] @relation("authorities_check_out")
+}
+
+model user_type {
+  user_type_id   Int    @id @default(autoincrement())
+  user_type_name String @db.VarChar(10)
+  user           user[]
+}
+
+model payment {
+  payment_id       Int       @id @default(autoincrement())
+  payment_datetime DateTime  @db.DateTime
+  customer         user      @relation(name: "customer_payment", fields: [customer_id], references: [user_id])
+  customer_id      Int
+  authorities      user      @relation(name: "authorities_payment", fields: [authorities_id], references: [user_id])
+  authorities_id   Int
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  booking          booking[]
+}
+
+model booking_status {
+  booking_status_id   Int       @id @default(autoincrement())
+  booking_status_name String    @db.VarChar(20)
+  booking             booking[]
+}
+
+model booking {
+  booking_id        Int            @id @default(autoincrement())
+  booking_datetime  DateTime       @db.DateTime
+  booking_status_id Int
+  room_id           Int
+  customer_id       Int
+  authorities_id    Int
+  payment_id        Int
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  booking_status    booking_status @relation(fields: [booking_status_id], references: [booking_status_id])
+  room              room           @relation(fields: [room_id], references: [room_id])
+  customer          user           @relation(name: "customer_booking", fields: [customer_id], references: [user_id])
+  authorities       user           @relation(name: "authorities_booking", fields: [authorities_id], references: [user_id])
+  payment           payment        @relation(fields: [payment_id], references: [payment_id])
+}
+
+model check_in {
+  check_in_id       Int      @id @default(autoincrement())
+  check_in_datetime DateTime @db.DateTime
+  customer_id       Int
+  authorities_id    Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  customer          user     @relation(name: "customer_check_in", fields: [customer_id], references: [user_id])
+  authorities       user     @relation(name: "authorities_check_in", fields: [authorities_id], references: [user_id])
+}
+
+model check_out {
+  check_out_id       Int      @id @default(autoincrement())
+  check_out_datetime DateTime @db.DateTime
+  customer_id        Int
+  authorities_id     Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  customer           user     @relation(name: "customer_check_out", fields: [customer_id], references: [user_id])
+  authorities        user     @relation(name: "authorities_check_out", fields: [authorities_id], references: [user_id])
+}
