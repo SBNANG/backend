@@ -50,7 +50,7 @@ model user {
 
 model user_type {
   user_type_id   Int    @id @default(autoincrement())
-  user_type_name String @db.VarChar(10)
+  user_type_name String @db.VarChar(20)
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   user           user[]
