@@ -9,13 +9,13 @@ generator client {
 
 model room {
   room_id       Int       @id @default(autoincrement())
+  room_number String @db.VarChar(5)
   room_bed_size String    @db.VarChar(10)
   room_price    Float     @db.Float
-  room_type     room_type @relation(fields: [room_type_id], references: [room_type_id])
   room_type_id  Int
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-
+  room_type     room_type @relation(fields: [room_type_id], references: [room_type_id])
   booking booking[]
 }
 
@@ -34,10 +34,10 @@ model user {
   user_surname          String      @db.VarChar(10)
   user_email            String      @db.VarChar(50)
   user_password         String      @db.Text
-  user_type             user_type   @relation(fields: [user_type_id], references: [user_type_id])
+  user_type_id          Int
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
-  user_type_id          Int
+  user_type             user_type   @relation(fields: [user_type_id], references: [user_type_id])
   customer_payment      payment[]   @relation("customer_payment")
   authorities_payment   payment[]   @relation("authorities_payment")
   customer_booking      booking[]   @relation("customer_booking")
@@ -51,30 +51,33 @@ model user {
 model user_type {
   user_type_id   Int    @id @default(autoincrement())
   user_type_name String @db.VarChar(10)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
   user           user[]
 }
 
 model payment {
   payment_id       Int       @id @default(autoincrement())
-  payment_datetime DateTime  @db.DateTime
-  customer         user      @relation(name: "customer_payment", fields: [customer_id], references: [user_id])
+  payment_image String @db.Text
   customer_id      Int
-  authorities      user      @relation(name: "authorities_payment", fields: [authorities_id], references: [user_id])
   authorities_id   Int
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+  customer         user      @relation(name: "customer_payment", fields: [customer_id], references: [user_id])
+  authorities      user      @relation(name: "authorities_payment", fields: [authorities_id], references: [user_id])
   booking          booking[]
 }
 
 model booking_status {
   booking_status_id   Int       @id @default(autoincrement())
   booking_status_name String    @db.VarChar(20)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
   booking             booking[]
 }
 
 model booking {
   booking_id        Int            @id @default(autoincrement())
-  booking_datetime  DateTime       @db.DateTime
   booking_status_id Int
   room_id           Int
   customer_id       Int
@@ -91,7 +94,6 @@ model booking {
 
 model check_in {
   check_in_id       Int      @id @default(autoincrement())
-  check_in_datetime DateTime @db.DateTime
   customer_id       Int
   authorities_id    Int
   createdAt         DateTime @default(now())
@@ -102,7 +104,6 @@ model check_in {
 
 model check_out {
   check_out_id       Int      @id @default(autoincrement())
-  check_out_datetime DateTime @db.DateTime
   customer_id        Int
   authorities_id     Int
   createdAt          DateTime @default(now())
