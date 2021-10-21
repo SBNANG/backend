@@ -7,28 +7,28 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Room {
+model room {
   room_id      Int       @id @default(autoincrement())
   room_number  String    @db.VarChar(5)
   room_price   Float     @db.Float
   room_type_id Int
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-  room_type    Room_type @relation(fields: [room_type_id], references: [room_type_id])
-  booking      Booking[]
+  room_type    room_type @relation(fields: [room_type_id], references: [room_type_id])
+  booking      booking[]
 }
 
-model Room_type {
+model room_type {
   room_type_id     Int      @id @default(autoincrement())
   room_type_name   String   @db.VarChar(20)
   room_type_bed    String   @db.VarChar(15)
   room_type_detail String   @db.VarChar(50)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  room             Room[]
+  room             room[]
 }
 
-model Customer {
+model customer {
   customer_id       Int       @id @default(autoincrement())
   customer_prefix   String    @db.VarChar(10)
   customer_name     String    @db.VarChar(10)
@@ -37,12 +37,12 @@ model Customer {
   customer_password String    @db.Text
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
-  payment           Payment[]
-  Booking           Booking[]
+  payment           payment[]
+  Booking           booking[]
 
 }
 
-model Authorities {
+model authorities {
   authorities_id       Int       @id @default(autoincrement())
   authorities_prefix   String    @db.VarChar(10)
   authorities_name     String    @db.VarChar(10)
@@ -51,31 +51,31 @@ model Authorities {
   authorities_password String    @db.Text
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
-  payment              Payment[]
-  Booking              Booking[]
+  payment              payment[]
+  Booking              booking[]
 }
 
-model Payment {
+model payment {
   payment_id     Int         @id @default(autoincrement())
   payment_image  String      @db.Text
   customer_id    Int
   authorities_id Int
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
-  booking        Booking[]
-  customer       Customer    @relation(fields: [customer_id], references: [customer_id])
-  authorities    Authorities @relation(fields: [authorities_id], references: [authorities_id])
+  booking        booking[]
+  customer       customer    @relation(fields: [customer_id], references: [customer_id])
+  authorities    authorities @relation(fields: [authorities_id], references: [authorities_id])
 }
 
-model Booking_status {
+model booking_status {
   booking_status_id   Int       @id @default(autoincrement())
   booking_status_name String    @db.VarChar(20)
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
-  booking             Booking[]
+  booking             booking[]
 }
 
-model Booking {
+model booking {
   booking_id        Int            @id @default(autoincrement())
   booking_start     DateTime       @db.DateTime
   booking_end       DateTime       @db.DateTime
@@ -86,27 +86,27 @@ model Booking {
   payment_id        Int
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
-  booking_status    Booking_status @relation(fields: [booking_status_id], references: [booking_status_id])
-  room              Room           @relation(fields: [room_id], references: [room_id])
-  customer          Customer       @relation(fields: [customer_id], references: [customer_id])
-  authorities       Authorities    @relation(fields: [authorities_id], references: [authorities_id])
-  payment           Payment        @relation(fields: [payment_id], references: [payment_id])
-  Check_in          Check_in[]
+  booking_status    booking_status @relation(fields: [booking_status_id], references: [booking_status_id])
+  room              room           @relation(fields: [room_id], references: [room_id])
+  customer          customer       @relation(fields: [customer_id], references: [customer_id])
+  authorities       authorities    @relation(fields: [authorities_id], references: [authorities_id])
+  payment           payment        @relation(fields: [payment_id], references: [payment_id])
+  Check_in          check_in[]
 }
 
-model Check_in {
+model check_in {
   check_in_id Int         @id @default(autoincrement())
   booking_id  Int
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  booking     Booking     @relation(fields: [booking_id], references: [booking_id])
-  Check_out   Check_out[]
+  booking     booking     @relation(fields: [booking_id], references: [booking_id])
+  Check_out   check_out[]
 }
 
-model Check_out {
+model check_out {
   check_out_id Int      @id @default(autoincrement())
   check_in_id  Int
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  check_in     Check_in @relation(fields: [check_in_id], references: [check_in_id])
+  check_in     check_in @relation(fields: [check_in_id], references: [check_in_id])
 }
