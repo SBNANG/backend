@@ -91,22 +91,22 @@ model Booking {
   customer          Customer       @relation(fields: [customer_id], references: [customer_id])
   authorities       Authorities    @relation(fields: [authorities_id], references: [authorities_id])
   payment           Payment        @relation(fields: [payment_id], references: [payment_id])
-  Check_out         Check_out[]
   Check_in          Check_in[]
 }
 
 model Check_in {
-  check_in_id Int      @id @default(autoincrement())
+  check_in_id Int         @id @default(autoincrement())
   booking_id  Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  booking     Booking  @relation(fields: [booking_id], references: [booking_id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  booking     Booking     @relation(fields: [booking_id], references: [booking_id])
+  Check_out   Check_out[]
 }
 
 model Check_out {
   check_out_id Int      @id @default(autoincrement())
-  booking_id   Int
+  check_in_id  Int
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  booking      Booking  @relation(fields: [booking_id], references: [booking_id])
+  check_in     Check_in @relation(fields: [check_in_id], references: [check_in_id])
 }
