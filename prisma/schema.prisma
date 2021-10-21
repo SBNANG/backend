@@ -8,20 +8,20 @@ generator client {
 }
 
 model Room {
-  room_id       Int       @id @default(autoincrement())
-  room_number   String    @db.VarChar(5)
-  room_bed_size String    @db.VarChar(10)
-  room_price    Float     @db.Float
-  room_type_id  Int
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  room_type     Room_type @relation(fields: [room_type_id], references: [room_type_id])
-  booking       Booking[]
+  room_id      Int       @id @default(autoincrement())
+  room_number  String    @db.VarChar(5)
+  room_price   Float     @db.Float
+  room_type_id Int
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  room_type    Room_type @relation(fields: [room_type_id], references: [room_type_id])
+  booking      Booking[]
 }
 
 model Room_type {
   room_type_id     Int      @id @default(autoincrement())
   room_type_name   String   @db.VarChar(20)
+  room_type_bed    String   @db.VarChar(15)
   room_type_detail String   @db.VarChar(50)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
